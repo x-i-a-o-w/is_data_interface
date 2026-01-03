@@ -1,0 +1,8 @@
+[package]
+name = "is_data_interface"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.100"
+notify = "8.2.0"
