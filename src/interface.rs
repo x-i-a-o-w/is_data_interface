@@ -1,4 +1,3 @@
-// TODO make variants of fns for non anyhow result
 /// interface that can read from a source and output the source as Result
 pub trait Interface {
     type Output;

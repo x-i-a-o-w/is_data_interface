@@ -47,7 +47,6 @@ impl FsInterface {
     pub fn paths(&self) -> hash_map::Iter<'_, PathBuf, RecursiveMode> {
         self.paths.iter()
     }
-    // TODO look at tests/interface.rs FIXTHIS
     pub fn watch(
         &mut self,
         path: &Path,
@@ -125,7 +124,6 @@ impl PathWatcher {
 
 // impl TryFrom<hash_map::Drain<'_, PathBuf, RecursiveMode>> for FileInterface {
 //     type Error = error::Error;
-//     // TODO myb turn paths into a hashmap because to make a new watcher you need a (PathBuf,RecursiveMode)
 //     fn try_from(
 //         map: hash_map::Drain<'_, PathBuf, RecursiveMode>,
 //     ) -> std::result::Result<Self, Self::Error> {

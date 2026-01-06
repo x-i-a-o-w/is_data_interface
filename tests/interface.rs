@@ -48,10 +48,12 @@ fn test_interface() {
         // let di = DataInterface::new(fi);
         use interface::Interface;
         let data = fi.read()?;
-        // TODO FIXTHIS
-        // let set = std::collections::HashMap::from_iter(data);
-        // assert_eq!(data.get(&write_text_path_1), PathBuf::from(&write_text_path_1));
-        // assert_eq!(data[0].1.as_ref().unwrap(), &Vec::from("1"));
+        if !data.err.is_empty(){
+        	panic!("err vec not empty");
+        }
+        use std::collections::HashMap;
+        let set:HashMap<PathBuf,Vec<u8>>=HashMap::from_iter(data.ok);
+        assert_eq!(set.get(std::path::Path::new(&write_text_path_1)), Some(&Vec::from("1")));
         Ok(())
     }();
     let _ = fs::remove_file(&write_text_path_1);

@@ -1,5 +1,3 @@
-// TODO replace this with a flattened type of error
-// type MultipleError<E = notify::Error> = Vec<E>;
 type NotifyError = notify::Error;
 #[derive(thiserror::Error, Debug)]
 pub enum Error<T = ()> {
@@ -12,12 +10,6 @@ pub enum Error<T = ()> {
     #[error("VecResult error")]
     VecResult(Box<VecResult<T>>),
 }
-
-// impl From<MultipleError> for Error {
-//     fn from(f: MultipleError) -> Self {
-//         Error::Multiple(f)
-//     }
-// }
 
 // struct InterfaceError{kind:ErrorKind,};enum ErrorKind{	}
 
