@@ -11,9 +11,7 @@ pub trait InterfaceReadManager<'input>: InterfaceRead<'input> {
     where
         Self: 'input,
         O: 'input;
-    fn read_all(
-        &'input self,
-    ) -> anyhow::Result<Self::OutputCollection<Self::Output>>;
+    fn read_all(&'input self) -> anyhow::Result<Self::OutputCollection<Self::Output>>;
 }
 
 /// InterfaceRead has the ability to fix the InterfaceRead if read returns Err(e)

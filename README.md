@@ -11,6 +11,9 @@ Do not use this library for projects that are security critical and/or have a "b
 
 It is recommended to use this library for regular user space
 
+STILL W.I.P.
+I will set feature flags for this crate and tweak some interfaces because I made them more complex then they need to be
+
 ## Core Idea
 
 Use the [InterfaceManager] trait to quickly turn a single read of [Interface] into a multi read which is flattened into the [VecResult].

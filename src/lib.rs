@@ -17,10 +17,10 @@ pub use interface::*;
 //         const WRITE_TEXT_2: &str = "test_2";
 //         let write_text_path_1: String = format!("tests/{WRITE_TEXT_1}.txt");
 //         let write_text_path_2: String = format!("tests/{WRITE_TEXT_2}.txt");
-// 
+//
 //         let _ = fs::write(&write_text_path_1, "1");
 //         let _ = fs::write(&write_text_path_2, "2");
-// 
+//
 //         let _ = || -> Result<()> {
 //             let paths = vec![
 //                 (&write_text_path_1, notify::RecursiveMode::NonRecursive),
@@ -30,7 +30,7 @@ pub use interface::*;
 //             // if !err.is_empty() {
 //             //     panic!("err vec not empty")
 //             // }
-// 
+//
 //             let paths: Vec<&str> = vec![write_text_path_1.as_ref(), write_text_path_2.as_ref()];
 //             use std::collections::HashSet;
 //             let set = HashSet::from_iter(paths.into_iter());
@@ -71,7 +71,7 @@ pub use interface::*;
 //             //     Some(&Vec::from("1"))
 //             // );
 //             // let lock = fi.lock();
-// 
+//
 //             Ok(())
 //         }();
 //         let _ = fs::remove_file(&write_text_path_1);

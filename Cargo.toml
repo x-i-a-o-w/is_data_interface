@@ -2,8 +2,22 @@
 name = "is_data_interface"
 version = "0.1.0"
 edition = "2024"
+description = "interface framework to build scalable, flexible and recoverable interfaces"
+include = ["src/*", "Cargo.toml", "LICENSE", "README.md", "examples"]
+keywords = [ "interface", "read", "write","filesystem"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/x-i-a-o-w/is_data_interface"
+# autobenches = false
+# autobins = false
+# autoexamples = false
+# autolib = false
+# autotests = false
+# build = false
 
 [dependencies]
 anyhow = "1.0.100"
 notify = "8.2.0"
 thiserror = "2.0.17"
+
+[lib]

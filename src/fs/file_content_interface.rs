@@ -1,5 +1,5 @@
 use super::prelude::*;
-pub type FileEntry<P:AsRef<Path>> = (P, Vec<u8>);
+pub type FileEntry<P> = (P, Vec<u8>);
 pub type FileEntryError = (PathBuf, error::Error);
 pub type FileEntryResult = (PathBuf, Result<Vec<u8>>);
 
@@ -19,9 +19,10 @@ where
     }
 }
 
-impl<'input,P:AsRef<Path>> interface::InterfaceRead<'input> for FileContentInterface<P>
-	where P:'input
- {
+impl<'input, P: AsRef<Path>> interface::InterfaceRead<'input> for FileContentInterface<P>
+where
+    P: 'input,
+{
     type Input = &'input P;
     type Output = Vec<u8>;
     type OutputError = error::Error;
@@ -30,24 +31,25 @@ impl<'input,P:AsRef<Path>> interface::InterfaceRead<'input> for FileContentInter
     }
 }
 
-impl<'input,Powned,P:AsRef<Path>> interface::InterfaceReadManager<'input> for FileContentInterface<P>
-	where 
-		// FileContentInterface<P>: interface::InterfaceRead<'input> ,
-		P:'input+ToOwned<Owned=Powned>,
-		
- {
-    type OutputCollection<O: 'input> = VecResult<Vec<(Powned,O)>, Vec<(Powned,error::Error)>>;
-    fn read_all(
-        &'input self,
-    ) -> anyhow::Result<Self::OutputCollection<Self::Output>> {
+impl<'input, Powned, P: AsRef<Path>> interface::InterfaceReadManager<'input>
+    for FileContentInterface<P>
+where
+    // FileContentInterface<P>: interface::InterfaceRead<'input> ,
+    P: 'input + ToOwned<Owned = Powned>,
+{
+    type OutputCollection<O: 'input> = VecResult<Vec<(Powned, O)>, Vec<(Powned, error::Error)>>;
+    fn read_all(&'input self) -> anyhow::Result<Self::OutputCollection<Self::Output>> {
         use interface::InterfaceRead;
-        let mut v: Self::OutputCollection<Self::Output> = VecResult{ok:Vec::new(),err:Vec::new()};
+        let mut v: Self::OutputCollection<Self::Output> = VecResult {
+            ok: Vec::new(),
+            err: Vec::new(),
+        };
         for i in &self.paths {
             VecResult::push_result(
                 v.as_mut(),
                 Self::read(i)
                     .map(|x| (i.to_owned(), x))
-                    .map_err(|x| (i.to_owned(), x))
+                    .map_err(|x| (i.to_owned(), x)),
             );
         }
         Ok(v)

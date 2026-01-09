@@ -1,6 +1,6 @@
 pub use crate::{
     Result,
-    error::{self, OrResult, VecResult},
+    error::{self, VecResult},
     interface,
     // lock::{Locked, RenameFileLock, Unlocked},
 };
