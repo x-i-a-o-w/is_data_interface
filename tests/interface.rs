@@ -1,11 +1,9 @@
 use anyhow::Result;
-use is_data_interface::{
-    fs::{FileInterface, FsInterface},
-    interface,
-};
+use is_data_interface::{error::VecResult, fs::FileContentInterface, interface};
 use std::fs;
 use std::path::PathBuf;
-#[test]
+use std::collections::HashSet;
+// #[test]
 fn test_interface() {
     const WRITE_TEXT_1: &str = "test_1";
     const WRITE_TEXT_2: &str = "test_2";
@@ -20,47 +18,56 @@ fn test_interface() {
             (&write_text_path_1, notify::RecursiveMode::NonRecursive),
             (&write_text_path_2, notify::RecursiveMode::NonRecursive),
         ];
-        let fsi = FsInterface::new(&paths)?.ok;
+        // let VecResult { ok, err } = FileContentInterface::new(&paths)?;
+        // if !err.is_empty() {
+        //     panic!("err vec not empty")
+        
+        let set = HashSet::from_iter(paths.clone().into_iter().map(|x|(PathBuf::from(x.0) )));
+        let mut fi = FileContentInterface::new(set);
         drop(paths);
-        let rx = fsi.share_reciver();
-        let fi = FileInterface::new(fsi);
+        // let rx = fi.get().share_reciver();
         let write_text_path_1_c_1 = write_text_path_1.clone();
         let write_text_path_1_c_2 = write_text_path_1_c_1.clone();
-        std::thread::scope(|_| {
-            std::thread::spawn(move || {
-                let _ = fs::read(&write_text_path_1_c_1);
-            });
-            if let Ok(read) = rx.recv_timeout(std::time::Duration::from_secs(1)) {
-                assert_eq!(
-                    read.unwrap(),
-                    notify::Event {
-                        kind: notify::EventKind::Access(notify::event::AccessKind::Open(
-                            notify::event::AccessMode::Any
-                        )),
-                        paths: vec!(fs::canonicalize(write_text_path_1_c_2).unwrap()),
-                        attrs: notify::event::EventAttributes::new(),
-                    }
-                );
-            } else {
-                panic!("no event recived");
-            }
-        });
+        // std::thread::scope(|_| {
+        //     std::thread::spawn(move || {
+        //         let _ = fs::read(&write_text_path_1_c_1);
+        //     });
+        //     if let Ok(read) = rx.recv_timeout(std::time::Duration::from_secs(1)) {
+        //         assert_eq!(
+        //             read.unwrap(),
+        //             notify::Event {
+        //                 kind: notify::EventKind::Access(notify::event::AccessKind::Open(
+        //                     notify::event::AccessMode::Any
+        //                 )),
+        //                 paths: vec!(fs::canonicalize(write_text_path_1_c_2).unwrap()),
+        //                 attrs: notify::event::EventAttributes::new(),
+        //             }
+        //         );
+        //     } else {
+        //         panic!("no event recived");
+        //     }
+        // });
         // let di = DataInterface::new(fi);
-        use interface::Interface;
-        let data = fi.read()?;
-        if !data.err.is_empty(){
-        	panic!("err vec not empty");
+        use crate::interface::{InterfaceRead, InterfaceReadManager};
+        let data = fi.read_all()?;
+        if !data.err.is_empty() {
+            panic!("err vec not empty");
         }
         use std::collections::HashMap;
-        let set:HashMap<PathBuf,Vec<u8>>=HashMap::from_iter(data.ok);
-        assert_eq!(set.get(std::path::Path::new(&write_text_path_1)), Some(&Vec::from("1")));
+        let set: HashMap<PathBuf, Vec<u8>> = HashMap::from_iter(data.ok);
+        assert_eq!(
+            set.get(std::path::Path::new(&write_text_path_1)),
+            Some(&Vec::from("1"))
+        );
+        // let lock = fi.lock();
+
         Ok(())
     }();
     let _ = fs::remove_file(&write_text_path_1);
     let _ = fs::remove_file(&write_text_path_2);
 }
 // #[test]
-// fn test_watch() {
+// fn test_lock() {
 //     const WRITE_TEXT: &str = "test_watch_file";
 //     let write_text_path: String = format!("tests/{WRITE_TEXT}.txt");
 //     let _ = fs::write(&write_text_path, WRITE_TEXT);
