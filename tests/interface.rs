@@ -1,9 +1,9 @@
 use anyhow::Result;
 use is_data_interface::{error::VecResult, fs::FileContentInterface, interface};
+use std::collections::HashSet;
 use std::fs;
 use std::path::PathBuf;
-use std::collections::HashSet;
-// #[test]
+#[test]
 fn test_interface() {
     const WRITE_TEXT_1: &str = "test_1";
     const WRITE_TEXT_2: &str = "test_2";
@@ -21,13 +21,13 @@ fn test_interface() {
         // let VecResult { ok, err } = FileContentInterface::new(&paths)?;
         // if !err.is_empty() {
         //     panic!("err vec not empty")
-        
-        let set = HashSet::from_iter(paths.clone().into_iter().map(|x|(PathBuf::from(x.0) )));
-        let mut fi = FileContentInterface::new(set);
+
+        let set = HashSet::from_iter(paths.clone().into_iter().map(|x| PathBuf::from(x.0)));
+        let fi = FileContentInterface::new(set);
         drop(paths);
+        // let write_text_path_1_c_1 = write_text_path_1.clone();
+        // let write_text_path_1_c_2 = write_text_path_1_c_1.clone();
         // let rx = fi.get().share_reciver();
-        let write_text_path_1_c_1 = write_text_path_1.clone();
-        let write_text_path_1_c_2 = write_text_path_1_c_1.clone();
         // std::thread::scope(|_| {
         //     std::thread::spawn(move || {
         //         let _ = fs::read(&write_text_path_1_c_1);
@@ -48,7 +48,7 @@ fn test_interface() {
         //     }
         // });
         // let di = DataInterface::new(fi);
-        use crate::interface::{InterfaceRead, InterfaceReadManager};
+        use crate::interface::InterfaceReadManager;
         let data = fi.read_all()?;
         if !data.err.is_empty() {
             panic!("err vec not empty");

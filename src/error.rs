@@ -173,3 +173,13 @@ impl<T, E> AsRef<VecResult<T, E>> for VecResult<T, E> {
         self
     }
 }
+
+#[macro_export]
+macro_rules! vec_result {
+    () => {
+        VecResult {
+            ok: Vec::new(),
+            err: Vec::new(),
+        }
+    };
+}
